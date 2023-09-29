@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/head :: head('Ricette')"></th:block>
+<body>
+<form
+        id="recipe-form"
+        method="POST"
+        th:action="@{/recipes/{method}{id}(method=${recipe.id} ? 'edit/' : 'create', id=${recipe.id} ? ${recipe.id} : '')}"
+        th:object="${recipe}"
+>
+    <th:block th:replace="fragments/form-input :: textInput('Titolo Ricetta', 'title')"></th:block>
+    <th:block th:replace="fragments/form-input :: textInput('Ingredienti', 'ingredients')"></th:block>
+    <th:block th:replace="fragments/form-input :: numberInput('1', 'Porzioni', 'portions')"></th:block>
+    <th:block th:replace="fragments/form-input :: textInput('Ricetta', 'description')"></th:block>
+    <th:block
+            th:replace="fragments/form-input :: timeInput('00:00', '', 'Tempo di preparazione', 'preparationTime')"></th:block>
+
+    <div class="mb-3">
+        <label>Categoria
+            <select class="form-select" th:field="*{category}" th:errorClass="is-invalid">
+                <option value="">Scegli categoria</option>
+                <option th:each="category : ${categories}" th:text="${category.name}"
+                        th:value="${category.id}"></option>
+            </select>
+        </label>
+
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('category')}">
+            <ul>
+                <li th:each="err : ${#fields.errors('category')}" th:text="${err}"></li>
+            </ul>
+        </div>
+    </div>
+
+    <th:block th:replace="fragments/form-input :: urlInput('Url immagine', 'imageUrl')"></th:block>
+
+    <input type="hidden" th:field="*{category}">
+
+
+    <button type="submit">Send</button>
+    <a href="/">Indietro</a>
+</form>
+</body>
+</html>

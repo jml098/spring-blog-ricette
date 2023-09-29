@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/head :: head('Categorie')"></th:block>
+<body>
+<th:block th:replace="fragments/navbar :: navbar('categories')"></th:block>
+<form
+        id="recipe-form"
+        method="POST"
+        th:action="@{/categories/{method}{id}(method=${category.id} ? 'edit/' : 'create', id=${category.id} ? ${category.id} : '')}"
+        th:object="${category}"
+>
+    <th:block th:replace="fragments/form-input :: textInput('Nome', 'name')"></th:block>
+    <th:block th:replace="fragments/form-input :: textInput('Descrizione', 'description')"></th:block>
+
+    <button type="submit">Send</button>
+    <a href="/categories">Indietro</a>
+</form>
+</body>
+</html>

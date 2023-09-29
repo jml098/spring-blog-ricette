@@ -1,0 +1,59 @@
+<th:block th:fragment="textInput(label, fieldName)">
+    <label class="w-100">
+        <th:block th:text="${#strings.capitalize(label)}"/>
+
+        <input class="form-control" th:errorClass="is-invalid" th:field="*{__${fieldName}__}"
+               type="text">
+
+    </label>
+    <div class="text-danger">
+        <ul>
+            <li th:each="err : ${#fields.errors('__${fieldName}__')}" th:text="${err}"></li>
+        </ul>
+    </div>
+</th:block>
+
+<th:block th:fragment="numberInput(step, label, fieldName)">
+    <label class="w-100">
+        <th:block th:text="${#strings.capitalize(label)}"/>
+
+        <input class="form-control" th:errorClass="is-invalid" th:field="*{__${fieldName}__}"
+               type="number" th:step="${step}">
+
+    </label>
+    <div class="text-danger">
+        <ul>
+            <li th:each="err : ${#fields.errors('__${fieldName}__')}" th:text="${err}"></li>
+        </ul>
+    </div>
+</th:block>
+
+<th:block th:fragment="timeInput(min, max, label, fieldName)">
+    <label class="w-100">
+        <th:block th:text="${#strings.capitalize(label)}"/>
+
+        <input class="form-control" th:errorClass="is-invalid" th:field="*{__${fieldName}__}"
+               type="time" th:min="${min}" th:max="${max}">
+
+    </label>
+    <div class="text-danger">
+        <ul>
+            <li th:each="err : ${#fields.errors('__${fieldName}__')}" th:text="${err}"></li>
+        </ul>
+    </div>
+</th:block>
+
+<th:block th:fragment="urlInput(label, fieldName)">
+    <label class="w-100">
+        <th:block th:text="${#strings.capitalize(label)}"/>
+
+        <input class="form-control" th:errorClass="is-invalid" th:field="*{__${fieldName}__}"
+               type="url">
+
+    </label>
+    <div class="text-danger">
+        <ul>
+            <li th:each="err : ${#fields.errors('__${fieldName}__')}" th:text="${err}"></li>
+        </ul>
+    </div>
+</th:block>

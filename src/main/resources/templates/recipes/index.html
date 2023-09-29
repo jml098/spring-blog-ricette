@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/head :: head('Ricette di Benedetta Rossi')"></th:block>
+<body>
+<th:block th:replace="fragments/navbar :: navbar('recipes')"></th:block>
+<table class="table">
+    <thead>
+    <tr>
+        <td>Titolo</td>
+        <td>Categoria</td>
+        <td>Ingredienti</td>
+        <td>Porzioni</td>
+        <td>Ricetta</td>
+        <td>Tempo di preparazione</td>
+        <td>Opzioni</td>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="recipe: ${recipes}" th:object="${recipe}">
+        <td th:text="*{title}"></td>
+        <td th:text="*{category.name}"></td>
+        <td th:text="*{ingredients}"></td>
+        <td th:text="*{portions}"></td>
+        <td th:text="*{description}"></td>
+        <td th:text="*{preparationTime}"></td>
+        <td><a class="btn btn-primary" th:href="@{/recipes/edit/{id}(id=*{id})}">Modifica</a>
+            <form method="POST" th:action="@{/recipes/delete/{id}(id=${recipe.id})}">
+                <button class="btn btn-danger" type="submit">Elimina</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="/recipes/create">Aggiungi</a>
+</body>
+</html>
