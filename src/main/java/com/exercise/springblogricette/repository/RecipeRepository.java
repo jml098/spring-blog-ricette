@@ -7,10 +7,7 @@ import java.util.List;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
-    List<Recipe> findAllByTitleContainingIgnoreCaseAndIngredientsContainingIgnoreCaseAndCategory_Id(
-            String title,
-            String ingredients,
-            Long categoryId
-    );
+    List<Recipe> findAllByOrderByDateAsc();
+    List<Recipe> findAllByOrderByDateDesc();
 
 }

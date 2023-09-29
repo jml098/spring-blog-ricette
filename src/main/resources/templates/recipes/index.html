@@ -8,7 +8,7 @@
         Categoria
         <select th:name="category">
             <option th:value="${null}">Filtra per categoria</option>
-            <option th:selected="${cat.id == category.id}" th:each="category: ${categories}" th:object="${category}"
+            <option th:selected="${cat != null && cat.id == category.id}" th:each="category: ${categories}" th:object="${category}"
                     th:text="*{name}" th:value="*{id}"></option>
         </select>
     </label>

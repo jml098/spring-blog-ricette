@@ -21,11 +21,19 @@ public class RecipeService {
     }
 
     public List<Recipe> getAll() {
-        return recipeRepository.findAll(/*Sort.by("creationDate")*/);
+        return recipeRepository.findAll();
+    }
+
+    public List<Recipe> getAllOrderedByDate(String order) {
+        if (order.equalsIgnoreCase("ASC")) {
+            return recipeRepository.findAllByOrderByDateAsc();
+        } else if (order.equalsIgnoreCase("DESC")) {
+            return recipeRepository.findAllByOrderByDateDesc();
+        } else {throw new RuntimeException();}
     }
 
     public List<Recipe> filterByParams(Map<String, String> params) {
-        List<Recipe> recipes = getAll();
+        List<Recipe> recipes = getAllOrderedByDate("DESC");
 
         if (params == null) return recipes;
         String title = params.get("title");
@@ -79,16 +87,6 @@ public class RecipeService {
                                        HttpStatus.NOT_FOUND,
                                        "Recipe not found."
                                ));
-    }
-
-    public List<Recipe> filterByTitleAndIngredientsAndCategory(
-            String title, String ingredients, Long categoryId
-    ) {
-
-        return recipeRepository.findAllByTitleContainingIgnoreCaseAndIngredientsContainingIgnoreCaseAndCategory_Id(title,
-                                                                                                                   ingredients,
-                                                                                                                   categoryId
-        );
     }
 
     public void update(Recipe recipe) {
