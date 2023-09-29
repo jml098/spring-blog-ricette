@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/recipes")
 public class RecipeController {
@@ -24,9 +26,37 @@ public class RecipeController {
     }
 
     @GetMapping
-    public String recipes(Model model) {
-        model.addAttribute("recipes", recipeService.getAll());
+    public String recipes(
+            Model model,
+            @RequestParam(defaultValue = "") String title,
+            @RequestParam(defaultValue = "") String ingredients
+    ) {
+        List<Recipe> recipes = recipeService.getAll();
+        if (!title.equals("")) {
+            recipes = recipes.stream()
+                             .filter(recipe -> recipe.getTitle()
+                                                     .contains(title))
+                             .toList();
+        }
+
+        if (!ingredients.equals("")) {
+            recipes = recipes.stream()
+                             .filter(recipe -> recipe.getIngredients()
+                                                     .contains(ingredients))
+                             .toList();
+        }
+
+        model.addAttribute("recipes", recipes);
+        model.addAttribute("title", title);
+        model.addAttribute("ingredients", ingredients);
         return "recipes/index";
+    }
+
+    @GetMapping("/{id}")
+    public String recipe(Model model, @PathVariable Long id) {
+        model.addAttribute("recipe", recipeService.getById(id));
+
+        return "recipes/detail";
     }
 
     @GetMapping("/create")

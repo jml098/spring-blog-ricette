@@ -3,6 +3,17 @@
 <th:block th:replace="fragments/head :: head('Ricette di Benedetta Rossi')"></th:block>
 <body>
 <th:block th:replace="fragments/navbar :: navbar('recipes')"></th:block>
+<form method="GET" action="/recipes">
+    <label>
+        <input type="text" name="title" th:value="${title}" placeholder="Filtra per titolo">
+    </label>
+
+    <label>
+        <input type="text" name="ingredients" th:value="${ingredients}" placeholder="Filtra per ingrediente">
+    </label>
+
+    <button class="btn btn-primary" type="submit">Filtra</button>
+</form>
 <table class="table">
     <thead>
     <tr>
@@ -18,7 +29,7 @@
 
     <tbody>
     <tr th:each="recipe: ${recipes}" th:object="${recipe}">
-        <td th:text="*{title}"></td>
+        <td><a th:href="@{/recipes/{id}(id=*{id})}" th:text="*{title}"></a></td>
         <td th:text="*{category.name}"></td>
         <td th:text="*{ingredients}"></td>
         <td th:text="*{portions}"></td>

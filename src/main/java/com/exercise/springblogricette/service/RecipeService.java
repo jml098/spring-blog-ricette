@@ -30,6 +30,17 @@ public class RecipeService {
                                ));
     }
 
+    public List<Recipe> filterByTitleAndIngredientsAndCategory(
+            String title, String ingredients, Long categoryId
+    ) {
+
+        return recipeRepository.findAllByTitleContainingIgnoreCaseAndIngredientsContainingIgnoreCaseAndCategory_Id(
+                title,
+                ingredients,
+                categoryId
+        );
+    }
+
     public void update(Recipe recipe) {
         recipeRepository.save(recipe);
     }
@@ -42,4 +53,5 @@ public class RecipeService {
     public void deleteById(Long id) {
         recipeRepository.deleteById(id);
     }
+
 }
