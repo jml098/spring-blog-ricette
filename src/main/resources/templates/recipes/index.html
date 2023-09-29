@@ -3,14 +3,35 @@
 <th:block th:replace="fragments/head :: head('Ricette di Benedetta Rossi')"></th:block>
 <body>
 <th:block th:replace="fragments/navbar :: navbar('recipes')"></th:block>
-<form method="GET" action="/recipes">
-    <label>
+<form method="GET" action="/recipes" class="d-flex bg-info">
+    <label class="d-flex flex-column">
+        Categoria
+        <select th:name="category">
+            <option th:value="${null}">Filtra per categoria</option>
+            <option th:selected="${cat.id == category.id}" th:each="category: ${categories}" th:object="${category}"
+                    th:text="*{name}" th:value="*{id}"></option>
+        </select>
+    </label>
+    <label class="d-flex flex-column">
+        Titolo
         <input type="text" name="title" th:value="${title}" placeholder="Filtra per titolo">
     </label>
 
-    <label>
+    <label class="d-flex flex-column">
+        Ingredienti
         <input type="text" name="ingredients" th:value="${ingredients}" placeholder="Filtra per ingrediente">
     </label>
+
+    <label class="d-flex flex-column">
+        Porzioni
+        <input type="number" step="1" min="1" name="portions" th:value="${portions}" placeholder="Filtra per porzioni">
+    </label>
+
+    <label class="d-flex flex-column">
+        Tempo di preparazione
+        <input type="time" min="00:00" name="preparationTime" th:value="${preparationTime}" placeholder="Filtra per tempo di preparazione">
+    </label>
+
 
     <button class="btn btn-primary" type="submit">Filtra</button>
 </form>

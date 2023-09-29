@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/recipes")
@@ -28,27 +29,25 @@ public class RecipeController {
     @GetMapping
     public String recipes(
             Model model,
-            @RequestParam(defaultValue = "") String title,
-            @RequestParam(defaultValue = "") String ingredients
+            @RequestParam(required = false) Map<String, String> params
     ) {
-        List<Recipe> recipes = recipeService.getAll();
-        if (!title.equals("")) {
-            recipes = recipes.stream()
-                             .filter(recipe -> recipe.getTitle()
-                                                     .contains(title))
-                             .toList();
-        }
 
-        if (!ingredients.equals("")) {
-            recipes = recipes.stream()
-                             .filter(recipe -> recipe.getIngredients()
-                                                     .contains(ingredients))
-                             .toList();
-        }
+        List<Recipe> recipes = recipeService.filterByParams(params);
 
         model.addAttribute("recipes", recipes);
-        model.addAttribute("title", title);
-        model.addAttribute("ingredients", ingredients);
+
+        if (params.get("category") != null && !params.get("category").equals("")) {
+            model.addAttribute(
+                    "cat",
+                    categoryService.getById(Long.parseLong(params.get("category")))
+            );
+        }
+
+        model.addAttribute("categories", categoryService.getAll());
+        model.addAttribute("title", params.get("title"));
+        model.addAttribute("ingredients", params.get("ingredients"));
+        model.addAttribute("portions", params.get("portions"));
+        model.addAttribute("preparationTime", params.get("preparationTime"));
         return "recipes/index";
     }
 
