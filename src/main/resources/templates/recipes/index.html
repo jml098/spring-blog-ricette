@@ -8,7 +8,8 @@
         Categoria
         <select th:name="category">
             <option th:value="${null}">Filtra per categoria</option>
-            <option th:selected="${cat != null && cat.id == category.id}" th:each="category: ${categories}" th:object="${category}"
+            <option th:selected="${cat != null && cat.id == category.id}" th:each="category: ${categories}"
+                    th:object="${category}"
                     th:text="*{name}" th:value="*{id}"></option>
         </select>
     </label>
@@ -29,7 +30,8 @@
 
     <label class="d-flex flex-column">
         Tempo di preparazione
-        <input type="time" min="00:00" name="preparationTime" th:value="${preparationTime}" placeholder="Filtra per tempo di preparazione">
+        <input type="time" min="00:00" name="preparationTime" th:value="${preparationTime}"
+               placeholder="Filtra per tempo di preparazione">
     </label>
 
 
@@ -56,15 +58,132 @@
         <td th:text="*{portions}"></td>
         <td th:text="*{description}"></td>
         <td th:text="*{preparationTime}"></td>
-        <td><a class="btn btn-primary" th:href="@{/recipes/edit/{id}(id=*{id})}">Modifica</a>
+        <td>
+
+            <button th:onclick="|openEditModal(*{id})|" type="button" class="btn btn-primary"
+                    th:attr="data-recipe-id=*{id}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Modifica
+            </button>
+
             <form method="POST" th:action="@{/recipes/delete/{id}(id=${recipe.id})}">
                 <button class="btn btn-danger" type="submit">Elimina</button>
             </form>
         </td>
     </tr>
     </tbody>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="recipe-form">
+                        <label class="form-label" id="recipe-title">
+                            Nome
+                            <input class="form-control" type="text" name="title">
+                        </label>
+
+                        <label class="form-label" id="recipe-ingredients">
+                            Ingredienti
+                            <input class="form-control" type="text" name="ingredients">
+                        </label>
+
+                        <label class="form-label" id="recipe-portions">
+                            Porzioni
+                            <input class="form-control" type="number" min="1" name="portions">
+                        </label>
+
+                        <label class="form-label" id="recipe-description">
+                            Ricetta
+                            <input class="form-control" type="text" name="description">
+                        </label>
+
+                        <label class="form-label" id="recipe-preparationTime">
+                            Tempo di preparazione
+                            <input class="form-control" type="time" min="00:00" name="preparationTime">
+                        </label>
+
+                        <label class="form-label" id="recipe-imageUrl">
+                            Immagine
+                            <input class="form-control" type="url" name="imageUrl">
+                        </label>
+
+
+                        <label class="form-label" id="recipe-category">
+                            Categoria
+                            <select class="form-select" name="category">
+                                <option value="">Scegli categoria</option>
+                                <option th:each="category : ${categories}" th:text="${category.name}"
+                                        th:value="${category.id}"></option>
+                            </select>
+                        </label>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="recipe-submit" type="submit" class="btn btn-primary">Modifica</button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
 </table>
 
-<a class="btn btn-primary" href="/recipes/create">Aggiungi</a>
+<button onclick="openCreateModal()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Aggiungi
+</button>
+
+
+<script>
+    function openEditModal(id) {
+        fetch("recipes/api/" + id).then(response => {
+            response.json().then(recipe => {
+                console.log(recipe)
+                document.getElementById('recipe-form').method = "POST"
+                document.getElementById('recipe-form').action = "/recipes/edit/" + id;
+
+                document.getElementById("staticBackdropLabel").innerText = recipe.title;
+
+                document.getElementById("recipe-title").firstElementChild.value = recipe.title;
+                document.getElementById("recipe-ingredients").firstElementChild.value = recipe.ingredients;
+                document.getElementById("recipe-portions").firstElementChild.value = recipe.portions;
+                document.getElementById("recipe-description").firstElementChild.value = recipe.description;
+                document.getElementById("recipe-preparationTime").firstElementChild.value = recipe.preparationTime;
+                document.getElementById("recipe-imageUrl").firstElementChild.value = recipe.imageUrl;
+                document.getElementById("recipe-category").firstElementChild.value = recipe.category.id;
+
+                document.getElementById("recipe-submit").innerText = "Modifica"
+            })
+        })
+    }
+
+    function openCreateModal() {
+        document.getElementById('recipe-form').method = "POST"
+        document.getElementById('recipe-form').action = "/recipes/create"
+
+        document.getElementById("staticBackdropLabel").innerText = "Aggiungi ricetta";
+
+        document.getElementById("recipe-title").firstElementChild.value = "";
+        document.getElementById("recipe-ingredients").firstElementChild.value = "";
+        document.getElementById("recipe-portions").firstElementChild.value = 1;
+        document.getElementById("recipe-description").firstElementChild.value = "";
+        document.getElementById("recipe-preparationTime").firstElementChild.value = "00:00";
+        document.getElementById("recipe-imageUrl").firstElementChild.value = "";
+        document.getElementById("recipe-category").firstElementChild.value = "";
+
+        document.getElementById("recipe-submit").innerText = "Aggiungi"
+
+    }
+</script>
 </body>
 </html>
