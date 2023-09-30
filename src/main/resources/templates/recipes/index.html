@@ -57,7 +57,13 @@
         <td th:text="*{ingredients}"></td>
         <td th:text="*{portions}"></td>
         <td th:text="*{description}"></td>
-        <td th:text="*{preparationTime}"></td>
+        <td th:with="hours=${#temporals.hour(recipe.preparationTime)},minutes=${#temporals.minute(recipe.preparationTime)}">
+            <span th:if="${hours > 1}" th:text="|${hours} ore |"></span>
+            <span th:if="${hours == 1}">1 ora</span>
+            <span th:if="${minutes > 1}" th:text="|${minutes} minuti|"></span>
+            <span th:if="${minutes == 1}">1 minuto</span>
+            <span th:if="${hours <= 0 && minutes <= 0}">0 minuti</span>
+        </td>
         <td>
 
             <button th:onclick="|openEditModal(*{id})|" type="button" class="btn btn-primary"
@@ -106,7 +112,7 @@
 
                         <label class="form-label" id="recipe-preparationTime">
                             Tempo di preparazione
-                            <input class="form-control" type="time" min="00:00" name="preparationTime">
+                            <input class="form-control" type="time" min="00:01" name="preparationTime">
                         </label>
 
                         <label class="form-label" id="recipe-imageUrl">
